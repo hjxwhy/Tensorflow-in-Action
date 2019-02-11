@@ -105,7 +105,7 @@ def loss(logits, labels):
     cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=labels,
                                                                    name='cross_entropy_per_example')
     # 计算代价函数平均值
-    cross_entropy_mean = tf.reduce_mean(cross_entropy, neme='cross_entropy')
+    cross_entropy_mean = tf.reduce_mean(cross_entropy, name='cross_entropy')
     # 将代价函数加入到总losses中，与各层wl不为0的weights相加，作为总losses
     tf.add_to_collection('losses', cross_entropy_mean)
     return tf.add_n(tf.get_collection('losses'), name='total_loss')
