@@ -5,6 +5,7 @@ import numpy as np
 import time
 
 '''
+    需要把cifar10和cifar10_input两个文件同时clone到一起，这两个文件夹是下载cifar10数据集和加载数据集，官网下载
     数据集：
         进阶卷积网络使用的是CIFAR-10
         60000张32*32彩色图像
