@@ -43,13 +43,13 @@ cifar10.maybe_download_and_extract()
 
 # 提取训练集和测试集
 # distort_inputs函数包含了一些数据增强操作
-images_train, labels_train = cifar10_input.distorted_inputs(eval_data=True, data_dir=data_dir, batch_size=batch_size)
+images_train, labels_train = cifar10_input.distorted_inputs(data_dir=data_dir, batch_size=batch_size)
 # 测试集数据正常读取，不做增强处理
 images_test, labels_test = cifar10_input.inputs(eval_data=True, data_dir=data_dir, batch_size=batch_size)
 
 # 设置输入数据承接
 image_holder = tf.placeholder(tf.float32, [batch_size, 24, 24, 3])
-label_holder = tf.placeholder(tf.float32, [batch_size])
+label_holder = tf.placeholder(tf.int32, [batch_size])
 
 # 第一层卷积操作
 # 初始化卷积核，第一层卷积核不进行L2正则化，大小为5*5，3通道，64个卷积核，标准差为0.05
@@ -85,7 +85,7 @@ bias3 = tf.Variable(tf.constant(0.1, shape=[384]))
 local3 = tf.nn.relu(tf.matmul(reshape, weight3) + bias3)
 
 # 第二隐藏层有192个神经元
-weight4 = variable_with_weight_loss(shape=[384.192], stddev=0.04, wl=0.004)
+weight4 = variable_with_weight_loss(shape=[384,192], stddev=0.04, wl=0.004)
 bias4 = tf.Variable(tf.constant(0.1, shape=[192]))
 local4 = tf.nn.relu(tf.matmul(local3, weight4) + bias4)
 
@@ -103,7 +103,7 @@ def loss(logits, labels):
     cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=labels,
                                                                    name='cross_entropy_per_example')
     # 计算代价函数平均值
-    cross_entropy_mean = tf.reduce_mean(cross_entropy, 'cross_entropy')
+    cross_entropy_mean = tf.reduce_mean(cross_entropy, neme='cross_entropy')
     # 将代价函数加入到总losses中，与各层wl不为0的weights相加，作为总losses
     tf.add_to_collection('losses', cross_entropy_mean)
     return tf.add_n(tf.get_collection('losses'), name='total_loss')
